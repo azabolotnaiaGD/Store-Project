@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql:5.7
+    networks:
+      - springbootmysql-net
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=store_project_db
+      - MYSQL_PASSWORD=password
+
+  springboot-app:
+    image: springboot-store
+    ports:
+      - "9090:8080"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/store_project_db?useSSL=false
+    networks:
+      - springbootmysql-net
+    depends_on:
+      - mysqldb
+
+networks:
+  springbootmysql-net:
